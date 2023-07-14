@@ -33,6 +33,7 @@ int fuelButtonState = 0;
 int oxidizerButtonState = 0;
 int igniterButtonState = 0;
 int armPinState = 0;
+int enableRelayState = 0;
 
 int fuelOUTPUT = 0;
 int oxidizerOUTPUT = 0;

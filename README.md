@@ -22,3 +22,9 @@ We should be able to do a variety of tests such as cold fire, hot fire, cold flo
 A hot fire should be fully automated, meaning the controller should automatically pressurize the tanks, light the igniter, start the motor, run and record data for x amount of time, shut the motor down, depressureize, and make everything safe.
 
 It should also have parameters for safetey checks, if something goes over pressure or abnoral the run should abort and safe sequence should start.
+
+# Resources
+
+raspberry pi -> arduino spi stuff
+https://roboticsbackend.com/introduction-to-wiringpi-for-raspberry-pi/
+https://roboticsbackend.com/raspberry-pi-master-arduino-uno-slave-spi-communication-with-wiringpi/
