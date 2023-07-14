@@ -77,7 +77,7 @@ void loop () {
   armPinState = digitalRead(armPin);
   enableRelayState = digitalRead(enableRelayPin);
   fuelButtonState = digitalRead(fuelButtonPin);
-  fuelOutput = digitalRead(fuelSolenoidPin);
+  fuelOUTPUT = digitalRead(fuelSolenoidPin);
   if (armPinState == LOW) {
 
     // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
