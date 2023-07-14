@@ -72,7 +72,7 @@ ISR (SPI_STC_vect)
 
 //  SPDR = c+10;
   int systemStatus[4] = { digitalRead(armPin), digitalRead(enableRelayPin), digitalRead(fuelButtonPin), digitalRead(oxidizerButtonPin) } ;
-  SPDR = systemStatus;
+  SPDR = digitalRead(armPin);
 }  // end of interrupt service routine (ISR) for SPI
 
 void loop () {
