@@ -92,8 +92,8 @@ void loop () {
     Serial.print(armPinState);
     Serial.print(" fuelButtonState: ");
     Serial.print(fuelButtonState);
-    Serial.print(" fuelOutput: ");
-    Serial.print(fuelOutput);
+    Serial.print(" fuelOUTPUT: ");
+    Serial.print(fuelOUTPUT);
     Serial.print(" enableRelayState: ");
     Serial.print(enableRelayState);
     Serial.print(" enableRelayPin: ");
@@ -106,8 +106,8 @@ void loop () {
     Serial.print(armPinState);
     Serial.print(" fuelButtonState: ");
     Serial.print(fuelButtonState);
-    Serial.print(" fuelOutput: ");
-    Serial.print(fuelOutput);
+    Serial.print(" fuelOUTPUT: ");
+    Serial.print(fuelOUTPUT);
     Serial.print(" enableRelayState: ");
     Serial.print(enableRelayState);
     Serial.print(" enableRelayPin: ");
