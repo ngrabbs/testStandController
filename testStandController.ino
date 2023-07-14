@@ -68,9 +68,12 @@ void setup() {
 // SPI interrupt routine
 ISR (SPI_STC_vect)
 {
-  byte c = SPDR;
+  String systemStatus = String(13);
+//  byte c = SPDR;
 
-  SPDR = c+10;
+//  SPDR = c+10;
+  systemStatus.concat(digitalRead(armPin));
+  SPDR = systemStatus;
 }  // end of interrupt service routine (ISR) for SPI
 
 void loop () {
