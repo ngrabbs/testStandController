@@ -31,7 +31,7 @@ void setup() {
   SPI.attachInterrupt();
 
   // Serial setup
-  Serial.bigin(9600);
+  Serial.begin(9600);
 
   // Button setup
   pinMode(fuelSolenoidPin, OUTPUT);
