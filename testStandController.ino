@@ -20,6 +20,7 @@ const int fuelSolenoidPin =  1;  // the pin that fires the relay connected to th
                                   // solenoid
 const int oxidizerSolenoidPin = 2; // the pin that fires the relay connected to the 
                                    // oxidizer solenoid
+const int oxidizerButtonPin = 7; 
 const int armPin = 3;             // the master enable physical switch
 const int enableRelayPin = 4;     // power up the relay board ( might not need )
 const int igniterButtonPin = 5;    // igniter physical button pin
@@ -31,6 +32,7 @@ const int igniterSolenoidPin = 6;  // the pin that fires the relay connected to 
 int fuelButtonState = 0;
 int oxidizerButtonState = 0;
 int igniterButtonState = 0;
+int armPinState = 0;
 
 int fuelOUTPUT = 0;
 int oxidizerOUTPUT = 0;
