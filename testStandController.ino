@@ -1,16 +1,31 @@
 #include <SPI.h>
 
 // constants
-const int fuelButtonPin = 53;     // the pin for the physical test stand fuel button
-const int fuelSolenoidPin =  37;  // the pin that fires the relay connected to the fuel
+// MEGA CONSTANTS
+//const int fuelButtonPin = 53;     // the pin for the physical test stand fuel button
+//const int fuelSolenoidPin =  37;  // the pin that fires the relay connected to the fuel
+//                                  // solenoid
+//const int oxidizerSolenoidPin = 0; // the pin that fires the relay connected to the 
+//                                   // oxidizer solenoid
+//const int armPin = 35;             // the master enable physical switch
+//const int enableRelayPin = 39;     // power up the relay board ( might not need )
+//const int igniterButtonPin = 0;    // igniter physical button pin
+//const int igniterSolenoidPin = 0;  // the pin that fires the relay connected to the igniter
+//                                   // solenoid
+// END MEGA CONSTANTS
+
+// UNO CONSTANTS
+const int fuelButtonPin = 0;     // the pin for the physical test stand fuel button
+const int fuelSolenoidPin =  1;  // the pin that fires the relay connected to the fuel
                                   // solenoid
-const int oxidizerSolenoidPin = 0; // the pin that fires the relay connected to the 
+const int oxidizerSolenoidPin = 2; // the pin that fires the relay connected to the 
                                    // oxidizer solenoid
-const int armPin = 35;             // the master enable physical switch
-const int enableRelayPin = 39;     // power up the relay board ( might not need )
-const int igniterButtonPin = 0;    // igniter physical button pin
-const int igniterSolenoidPin = 0;  // the pin that fires the relay connected to the igniter
+const int armPin = 3;             // the master enable physical switch
+const int enableRelayPin = 4;     // power up the relay board ( might not need )
+const int igniterButtonPin = 5;    // igniter physical button pin
+const int igniterSolenoidPin = 6;  // the pin that fires the relay connected to the igniter
                                    // solenoid
+// END UNO CONSTANTS
 
 // variables
 int fuelButtonState = 0;
@@ -56,7 +71,7 @@ ISR (SPI_STC_vect)
 }  // end of interrupt service routine (ISR) for SPI
 
 void loop () {
-    armPinState = digitalRead(armPin);
+  armPinState = digitalRead(armPin);
   enableRelayState = digitalRead(enableRelayPin);
   fuelButtonState = digitalRead(fuelButtonPin);
   fuelOutput = digitalRead(fuelSolenoidPin);
