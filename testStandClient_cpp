@@ -14,9 +14,16 @@ int main(int argc, char **argv)
     }
     std::cout << "SPI communication successfully setup.\n";
    
-    unsigned char buf[13] = { 23, 0 };
-    wiringPiSPIDataRW(SPI_CHANNEL, buf, 13);
+//    std::cout << "argc: " << argc << "\n";
+//
+//    std::cout << "argv[0]: " << argv[0] << "\n";
+//    std::cout << "argv[1]: " << argv[1] << "\n";
+//
+//    unsigned char testArg = *argv[1];
 
-    std::cout << "Data returned: " << +buf[1] << "\n"; 
+    unsigned char buf[2] = { 1, 0 };
+    wiringPiSPIDataRW(SPI_CHANNEL, buf, 2);
+
+    std::cout << "Data returned: " << +buf[0] << " " << +buf[1] << " " << +buf[1] << "\n"; 
     return 0;
 }

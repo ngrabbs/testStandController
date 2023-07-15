@@ -28,3 +28,6 @@ It should also have parameters for safetey checks, if something goes over pressu
 raspberry pi -> arduino spi stuff
 https://roboticsbackend.com/introduction-to-wiringpi-for-raspberry-pi/
 https://roboticsbackend.com/raspberry-pi-master-arduino-uno-slave-spi-communication-with-wiringpi/
+
+state machines:
+https://forum.arduino.cc/t/state-machines/580593

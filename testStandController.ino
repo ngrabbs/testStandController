@@ -26,6 +26,7 @@ const int enableRelayPin = 4;     // power up the relay board ( might not need )
 const int igniterButtonPin = 5;    // igniter physical button pin
 const int igniterSolenoidPin = 6;  // the pin that fires the relay connected to the igniter
                                    // solenoid
+const int LOOP_DELAY = 100000;
 // END UNO CONSTANTS
 
 // variables
@@ -38,6 +39,13 @@ int enableRelayState = 0;
 int fuelOUTPUT = 0;
 int oxidizerOUTPUT = 0;
 int igniterOUTPUT = 0;
+
+int testState = 0;
+
+int counter = 0;
+
+enum {idle, coldFire, pressureTest, hotFire, dePressure};
+unsigned char systemState = idle;
 
 void setup() {
   // SPI setup
@@ -60,27 +68,57 @@ void setup() {
   pinMode(enableRelayPin, OUTPUT);
 
   // init pins ?
-  digitalWrite(enableRelayPin, HIGH);
-  digitalWrite(fuelSolenoidPin, HIGH);
+  digitalWrite(enableRelayPin, LOW);
+  digitalWrite(fuelSolenoidPin, LOW);
+  digitalWrite(fuelButtonPin, LOW);
 
 }
 
 // SPI interrupt routine
 ISR (SPI_STC_vect)
 {
-//  byte c = SPDR;
+  byte c = SPDR;
+  //testState = c;
 
-//  SPDR = c+10;
-  int systemStatus[4] = { digitalRead(armPin), digitalRead(enableRelayPin), digitalRead(fuelButtonPin), digitalRead(oxidizerButtonPin) } ;
-  SPDR = digitalRead(armPin);
+  if (c == 1) {
+    testState = 1;
+    SPDR = c+1;
+  } else {
+    testState = c;
+    SPDR = c;
+  }
+
+  //SPDR = c+10;
+  //int systemStatus[4] = { digitalRead(armPin), digitalRead(enableRelayPin), digitalRead(fuelButtonPin), digitalRead(oxidizerButtonPin) } ;
+  //SPDR = digitalRead(armPin);
+  //SPDR = 1;
 }  // end of interrupt service routine (ISR) for SPI
+
+void printStates(void) {
+  // any statement(s)
+    Serial.print("testState: ");
+    Serial.print(testState);
+    Serial.print(" Counter: ");
+    Serial.print(counter);
+    Serial.print(" Status armPinState: ");
+    Serial.print(armPinState);
+    Serial.print(" fuelButtonState: ");
+    Serial.print(fuelButtonState);
+    Serial.print(" fuelOUTPUT: ");
+    Serial.print(fuelOUTPUT);
+    Serial.print(" enableRelayState: ");
+    Serial.print(enableRelayState);
+    Serial.print(" enableRelayPin: ");
+    Serial.println(enableRelayPin);
+}
 
 void loop () {
   armPinState = digitalRead(armPin);
   enableRelayState = digitalRead(enableRelayPin);
   fuelButtonState = digitalRead(fuelButtonPin);
   fuelOUTPUT = digitalRead(fuelSolenoidPin);
-  if (armPinState == LOW) {
+  if (armPinState == HIGH) {
+    enableRelayState = 1;
 
     // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
     if (fuelButtonState == HIGH) {
@@ -90,30 +128,16 @@ void loop () {
       // turn LED off:
       digitalWrite(fuelSolenoidPin, LOW);
     }
-    Serial.print("Status armPinState: ");
-    Serial.print(armPinState);
-    Serial.print(" fuelButtonState: ");
-    Serial.print(fuelButtonState);
-    Serial.print(" fuelOUTPUT: ");
-    Serial.print(fuelOUTPUT);
-    Serial.print(" enableRelayState: ");
-    Serial.print(enableRelayState);
-    Serial.print(" enableRelayPin: ");
-    Serial.println(enableRelayPin);
   } else {
-  //  enableRelayState = 0;
-  //  digitalWrite(enableRelayPin, HIGH);
+    // if armPin is off, everything should be off
+    enableRelayState = 0;
     digitalWrite(fuelSolenoidPin, LOW);
-    Serial.print("Status armPinState: ");
-    Serial.print(armPinState);
-    Serial.print(" fuelButtonState: ");
-    Serial.print(fuelButtonState);
-    Serial.print(" fuelOUTPUT: ");
-    Serial.print(fuelOUTPUT);
-    Serial.print(" enableRelayState: ");
-    Serial.print(enableRelayState);
-    Serial.print(" enableRelayPin: ");
-    Serial.println(enableRelayPin);
+    digitalWrite(oxidizerSolenoidPin, LOW);
+    digitalWrite(enableRelayPin, LOW);
   }
-  //udelay(1);
+  counter += 1;
+  if (counter == LOOP_DELAY) {
+    counter = 0;
+    printStates();
+  }
 }
