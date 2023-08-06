@@ -1,0 +1,94 @@
+/* Nick Grabbs 07/22/2023 test.cpp
+ * playing around with millis() and data structure for logging
+ *
+ */
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <unistd.h> // for usleep
+#include <string>
+#include <vector>
+
+using namespace std;
+
+
+/*
+ * What do we want....
+ * If in a cold flow / static hydro test / what ever
+ * we want to take readings of the system/sensors/state and push to an array
+ * that can be processed and dumped as csv output at the end of the run
+ * and imported intoe excel or what ever so graphy graphs can be made
+ *
+ * you have to use a state machine that has a top level function that is the logger
+ * and the states update themselves
+ *
+ * can we have a logger(); function that just hits all the sensors
+ */
+
+
+enum systemStates {stateOne, stateTwo, stateThree, stateFour};
+unsigned char systemState;  // What the door is doing at any given moment.
+unsigned int microsecond = 1000000;
+
+float fuelPressure = 78.987;
+float oxPressure = 90.000;
+float systemVoltage = 12.988;
+bool fuelButtonState = 0;
+vector<string> globalLog; // vector should be a lib in arduino
+auto start = std::chrono::system_clock::now(); // in arduino use millis()
+
+void logger(void) {
+
+	auto end = std::chrono::system_clock::now();
+
+	string myLog = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()) + ","
+			+ std::to_string(systemStates(systemState)) + "," + std::to_string(fuelPressure) + "," + std::to_string(oxPressure);
+	globalLog.push_back(myLog);
+}
+
+int main() {
+	// gather the user information
+	cout << "Starting State Machine:\n";
+
+	while(1) {
+		switch (systemState) {
+
+			case stateOne: // Nothing happening, waiting for switchInput
+				cout << "Starting State One\n";
+				logger();
+				usleep(3 * microsecond);//sleeps for 3 second
+				systemState = stateTwo;
+				break;
+			case stateTwo:
+				cout << "Starting State Two\n";
+				logger();
+				usleep(3 * microsecond);//sleeps for 3 second
+				systemState = stateThree;
+				break;
+			case stateThree:
+				cout << "Starting State Three\n";
+				logger();
+				usleep(3 * microsecond);//sleeps for 3 second
+				systemState = stateFour;
+				break;
+			case stateFour:
+				cout << "Starting State Four\n";
+				logger();
+				cout << "Dump Log\n\n";
+				cout << "log size: " << globalLog.size() << "\n";
+				int count = 0;
+				for( int count = 0; count < globalLog.size(); count ++) {
+					cout << "log entry: " << globalLog[count] << "\n";
+				}
+
+				usleep(3 * microsecond);//sleeps for 3 second
+				systemState = stateOne;
+				break;
+		}
+		auto end = std::chrono::system_clock::now();
+		std::cout << "stateChange: [" << systemStates(systemState) << "] "
+			<< std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+			<< "ms.\n";
+	}
+	return 0;
+}

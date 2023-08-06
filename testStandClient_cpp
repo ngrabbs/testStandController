@@ -1,4 +1,5 @@
 //  g++ -o testStandClient testStandClient.cpp -lwiringPi
+// cp testStandClient_cpp testStandClient.cpp;  g++ -o testStandClient testStandClient.cpp -lwiringPi; ./testStandClient 1
 #include <iostream>
 #include <wiringPiSPI.h>
 
@@ -22,8 +23,10 @@ int main(int argc, char **argv)
 //    unsigned char testArg = *argv[1];
 
     unsigned char buf[2] = { 1, 0 };
-    wiringPiSPIDataRW(SPI_CHANNEL, buf, 2);
+//    while(1) {
+        wiringPiSPIDataRW(SPI_CHANNEL, buf, 2);
 
-    std::cout << "Data returned: " << +buf[0] << " " << +buf[1] << " " << +buf[1] << "\n"; 
+        std::cout << "Data returned: " << +buf[0] << " " << +buf[1] << "\n"; 
+//    }
     return 0;
 }

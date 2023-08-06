@@ -1,0 +1,247 @@
+---- Opened the serial port /dev/ttyACM0 ----
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [4.59]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [4.10]
+FP: [10.45]
+FP: [15.46]
+FP: [20.04]
+FP: [24.32]
+FP: [28.23]
+FP: [31.71]
+FP: [34.77]
+FP: [37.70]
+FP: [38.68]
+completed pressure fill FP: [38.74]
+checking if tank is pressurized FP: [38.68]
+opening oxidizer solenoid
+FP: [38.31]
+FP: [31.47]
+FP: [31.35]
+FP: [25.54]
+checking pressure sensors FP: [22.85]
+depressuring fuel tank FP: [22.37]
+Fuel pressure difference: [8.13] in [1] seconds
+final pressure check FP: [14.24]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+P_2q
+---- Closed the serial port /dev/ttyACM0 ----
+---- Opened the serial port /dev/ttyACM0 ----
+
+enable the arm pin and hold fuel for 3 seconds to start test
+Arm pin has changed to: 0
+systemState: 1 Counter: 0 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [-0.06]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [-0.06]
+FP: [5.75]
+FP: [10.33]
+FP: [14.61]
+FP: [18.58]
+FP: [22.18]
+FP: [25.42]
+FP: [28.60]
+FP: [31.29]
+FP: [33.79]
+completed pressure fill FP: [35.93]
+checking if tank is pressurized FP: [33.79]
+opening oxidizer solenoid 500 millis FP: [32.20]
+closed oxidizer solenoid FP: [30.74]
+opening oxidizer solenoid 500 millis FP: [30.61]
+closed oxidizer solenoid FP: [29.39]
+checking pressure sensors FP: [24.20]
+depressuring fuel tank FP: [23.34]
+Fuel pressure difference: [8.55] in [1] seconds
+final pressure check FP: [14.79]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [8.93]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [8.07]
+FP: [13.20]
+FP: [17.23]
+FP: [21.08]
+FP: [24.44]
+FP: [27.38]
+FP: [30.00]
+FP: [32.39]
+FP: [34.46]
+FP: [36.23]
+completed pressure fill FP: [37.70]
+checking if tank is pressurized FP: [35.75]
+opening oxidizer solenoid 500 millis FP: [34.28]
+closed oxidizer solenoid FP: [31.10]
+opening oxidizer solenoid 500 millis FP: [31.04]
+closed oxidizer solenoid FP: [27.93]
+checking pressure sensors FP: [24.08]
+depressuring fuel tank FP: [23.47]
+Fuel pressure difference: [8.43] in [1] seconds
+final pressure check FP: [14.91]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [6.79]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [6.05]
+FP: [11.00]
+FP: [14.91]
+FP: [18.58]
+FP: [21.82]
+FP: [24.63]
+FP: [27.25]
+FP: [29.51]
+FP: [31.53]
+FP: [33.18]
+completed pressure fill FP: [34.59]
+checking if tank is pressurized FP: [32.69]
+opening oxidizer solenoid 500 millis FP: [31.29]
+closed oxidizer solenoid FP: [26.09]
+opening oxidizer solenoid 500 millis FP: [25.85]
+closed oxidizer solenoid FP: [21.69]
+checking pressure sensors FP: [12.47]
+depressuring fuel tank FP: [11.25]
+Fuel pressure difference: [5.56] in [1] seconds
+final pressure check FP: [5.69]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [-0.06]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [-0.06]
+FP: [7.89]
+FP: [13.69]
+FP: [18.82]
+FP: [23.83]
+FP: [28.05]
+FP: [32.32]
+FP: [35.93]
+FP: [38.62]
+FP: [38.74]
+completed pressure fill FP: [38.74]
+checking if tank is pressurized FP: [38.68]
+opening oxidizer solenoid 500 millis FP: [36.85]
+closed oxidizer solenoid FP: [30.86]
+opening oxidizer solenoid 500 millis FP: [30.55]
+closed oxidizer solenoid FP: [25.85]
+checking pressure sensors FP: [18.76]
+depressuring fuel tank FP: [17.60]
+Fuel pressure difference: [7.39] in [1] seconds
+final pressure check FP: [10.33]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [-0.06]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [-0.06]
+FP: [7.21]
+FP: [12.41]
+FP: [17.42]
+FP: [21.76]
+FP: [25.97]
+FP: [29.76]
+FP: [33.24]
+FP: [36.42]
+FP: [38.56]
+completed pressure fill FP: [38.74]
+checking if tank is pressurized FP: [37.58]
+opening oxidizer solenoid 500 millis FP: [34.65]
+closed oxidizer solenoid FP: [29.03]
+opening oxidizer solenoid 500 millis FP: [28.78]
+closed oxidizer solenoid FP: [24.08]
+checking pressure sensors FP: [17.97]
+depressuring fuel tank FP: [16.93]
+Fuel pressure difference: [7.03] in [1] seconds
+final pressure check FP: [9.84]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [2.02]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [1.11]
+FP: [7.76]
+FP: [12.90]
+FP: [17.42]
+FP: [21.51]
+FP: [25.30]
+FP: [28.84]
+FP: [31.90]
+FP: [34.77]
+FP: [37.33]
+completed pressure fill FP: [38.62]
+checking if tank is pressurized FP: [35.87]
+opening oxidizer solenoid 500 millis FP: [33.12]
+closed oxidizer solenoid FP: [27.50]
+opening oxidizer solenoid 500 millis FP: [27.38]
+closed oxidizer solenoid FP: [22.73]
+checking pressure sensors FP: [17.23]
+depressuring fuel tank FP: [16.26]
+Fuel pressure difference: [6.90] in [0] seconds
+final pressure check FP: [9.35]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1
+Arm pin has changed to: 0
+systemState: 1 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+starting cold fire procedure
+reading pressure sensors FP: [1.84]
+checking if fuel solenoid is closed
+checking if oxidizer solenoid is closed
+pressurizing fuel tank, opening fill valve
+FP: [1.04]
+FP: [7.21]
+FP: [12.04]
+FP: [16.26]
+FP: [20.17]
+FP: [23.83]
+FP: [26.95]
+FP: [29.88]
+FP: [32.45]
+FP: [34.77]
+completed pressure fill FP: [36.91]
+checking if tank is pressurized FP: [33.55]
+opening oxidizer solenoid 500 millis FP: [30.98]
+closed oxidizer solenoid FP: [25.67]
+opening oxidizer solenoid 500 millis FP: [25.48]
+closed oxidizer solenoid FP: [21.08]
+checking pressure sensors FP: [16.01]
+depressuring fuel tank FP: [15.10]
+Fuel pressure difference: [6.54] in [1] seconds
+final pressure check FP: [8.50]
+cold flow is complete setting state to idle
+systemState: 0 Counter: 10 Status armPinState: 1 fuelButtonState: 0 fuelOUTPUT: 0 enableRelayState: 0 enableRelayPin: 39
+Arm pin has changed to: 1

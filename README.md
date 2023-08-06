@@ -31,3 +31,31 @@ https://roboticsbackend.com/raspberry-pi-master-arduino-uno-slave-spi-communicat
 
 state machines:
 https://forum.arduino.cc/t/state-machines/580593
+
+info on sensor calibration:
+https://forum.arduino.cc/t/heavy-psi-air-pressure-sensor-reader/350154/8
+```Try this.
+Change the offset value (second line) to the number you get in the serial monitor without pressure (zeroing).
+Adjust the "fullScale" value for the right readout at full pressure (calibration).
+
+If that works, think about adding "smoothing" for more stable readings.
+Leo..```
+```int rawValue; // A/D readings
+int offset = 102; // zero pressure adjust
+int fullScale = 922; // max pressure (span) adjust
+float pressure; // final pressure
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  rawValue = analogRead(A0);
+  Serial.print("Raw A/D is  ");
+  Serial.print(rawValue);
+  pressure = (rawValue - offset) * 1.2 / (fullScale - offset); // pressure conversion
+  Serial.print("   The pressure is  ");
+  Serial.print(pressure, 3); // three decimal places
+  Serial.println("  Mpa");
+  delay(500);
+}```
