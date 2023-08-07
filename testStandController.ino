@@ -59,6 +59,13 @@ const int oxidizerOperatingPressure = 100;
 const int tankPressureAbortTime = 30000;
 const int logSampleTimeMillis = 20;
 
+// pressure sensor params
+// int sensorRawValue;
+// int pressureOffset = 102; // zero pressure adjust
+// int pressureFullScale = 922; // max pressure (span) adjust
+// float pressurePressure;
+// end pressure sensor params
+
 int DEBUG = 0;
 int fuelButtonState = 1;
 int oxidizerButtonState = 0;
@@ -82,7 +89,8 @@ enum systemStates
   coldFire,
   testLogger,
   hotFire,
-  toggleDebug
+  toggleDebug,
+  debugSensorParams
 };
 systemStates systemState = idle;
 systemStates systemStatePrev = idle;
@@ -98,6 +106,7 @@ void runTestLogger(void);
 void toggleOutput(String);
 void timedLogger(int);
 void runToggleDebug(void);
+void runDebugSensorParams(void);
 
 void setup()
 {
@@ -131,20 +140,49 @@ void setup()
 // main program loop
 void loop()
 {
-  switch (systemState)
+  if (systemStatePrev != idle)
   {
-  case testLogger:
-    runTestLogger();
-    break;
-  case coldFire:
-    runColdFire();
-    break;
-  case toggleDebug:
-    runToggleDebug();
-    break;
-  default:
-    runIdle();
-    break;
+    printOptions();
+    systemStatePrev = systemState;
+  }
+
+  if (Serial.available() > 0)
+  {
+    // read the incoming byte:
+    int request = Serial.readString().toInt();
+    Serial.print("Got: [");
+    Serial.print(request); // print as an ASCII-encoded decimal
+    Serial.println("]");
+    switch(request) {
+      case 1:
+        changeSystemState(testLogger);
+        runTestLogger();
+        break;
+      case 2:
+        changeSystemState(coldFire);
+        runColdFire();
+        break;
+      case 3:
+        changeSystemState(toggleDebug);
+        runToggleDebug();
+        break;
+      case 4:
+        changeSystemState(debugSensorParams);
+        runDebugSensorParams();
+        break;
+      default:
+        Serial.println("Incoming byte does not match, setting state to Idle");
+        printOptions();
+        changeSystemState(idle);
+    }
+  }
+  else
+  {
+    fuelButtonState = digitalRead(fuelButtonPin);
+    if (fuelButtonState == 0)
+    {
+      changeSystemState(coldFire);
+    }
   }
 }
 
@@ -209,6 +247,7 @@ void printOptions(void)
   Serial.println("  Test Logger: 1");
   Serial.println("  Cold Fire: 2");
   Serial.println("  Toggle Debug: 3");
+  Serial.println("  Debug Sensor Param: 4");
   Serial.println("");
 }
 
@@ -260,60 +299,74 @@ void runTestLogger(void)
   changeSystemState(idle);
 }
 
-void runIdle(void)
-{
-  if (systemStatePrev != idle)
-  {
-    printOptions();
-    systemStatePrev = systemState;
-  }
+void runDebugSensorParams(void) {
+  Serial.println("Debug Sensor Params");
 
-  if (Serial.available() > 0)
-  {
-    // read the incoming byte:
-    String request = Serial.readString();
-    request.trim();
-    Serial.print("Got: [");
-    Serial.print(request); // print as an ASCII-encoded decimal
-    Serial.println("]");
-    if (request == "1")
-    {
-      changeSystemState(testLogger);
-    }
-    else if (request == "2")
-    {
-      changeSystemState(coldFire);
-    }
-    else if (request == "3")
-    {
-      changeSystemState(toggleDebug);
-    }
-    /*
-    switch(request) {
-      case "1":
-        changeSystemState(testLogger);
-        break;
-      case "2":
-        changeSystemState(coldFire);
-        break;
-      case "3":
-        changeSystemState(testPin);
-        break;
-      default:
-        Serial.println("Incoming byte does not match, setting state to Idle");
-        printOptions();
-        changeSystemState(idle);
-    }
-    */
-  }
-  else
-  {
-    fuelButtonState = digitalRead(fuelButtonPin);
-    if (fuelButtonState == 0)
-    {
-      changeSystemState(coldFire);
-    }
-  }
+  // // pressure sensor params
+  int sensorRawValue;
+  int pressureOffset = 102; // zero pressure adjust
+  int pressureFullScale = 922; // max pressure (span) adjust
+  float pressureMultiply = 1.2; 
+  float pressurePressure;
+  // // end pressure sensor params
+
+  Serial.print("current: pressureOffset: [");
+  Serial.print(pressureOffset);
+  Serial.print("] pressureFullScale: [");
+  Serial.print(pressureFullScale);
+  Serial.print("] pressureMultiply: [");
+  Serial.print(pressureMultiply);
+  Serial.print("]");
+  sensorRawValue = analogRead(A0);
+  Serial.print(" Raw A/D: [");
+  Serial.print(sensorRawValue);
+  Serial.print("]");
+  pressurePressure = (sensorRawValue - pressureOffset) * pressureMultiply / (pressureFullScale - pressureOffset); // pressure conversion
+  Serial.print(" pressure: [");
+  Serial.print(pressurePressure, 3); // three decimal places
+  Serial.println("] PSI");
+
+  // get new pressureOffset:
+  Serial.print("Enter new pressure offset: ");
+  while(Serial.available() <= 0) {}
+  pressureOffset = Serial.readString().toInt();
+  Serial.print("Got: ");
+  Serial.println(pressureOffset);
+
+  // get new pressureFullScale
+  Serial.print("Enter new pressure full scale: ");
+  while(Serial.available() <= 0) {}
+  pressureFullScale = Serial.readString().toInt();
+  Serial.print("Got: ");
+  Serial.println(pressureFullScale);
+
+  // get new pressureMultiply
+  Serial.print("Enter new pressure multiply: ");
+  while(Serial.available() <= 0) {}
+  pressureMultiply = Serial.readString().toFloat();
+  Serial.print("Got: ");
+  Serial.println(pressureMultiply);
+
+
+  Serial.print("new: pressureOffset: [");
+  Serial.print(pressureOffset);
+  Serial.print("] pressureFullScale: [");
+  Serial.print(pressureFullScale);
+  Serial.print("] pressureMultiply: [");
+  Serial.print(pressureMultiply);
+  Serial.print("]");
+  sensorRawValue = analogRead(A0);
+  Serial.print(" Raw A/D: [");
+  Serial.print(sensorRawValue);
+  Serial.print("]");
+  pressurePressure = (sensorRawValue - pressureOffset) * pressureMultiply / (pressureFullScale - pressureOffset); // pressure conversion
+  Serial.print(" pressure: [");
+  Serial.print(pressurePressure, 3); // three decimal places
+  Serial.println("] PSI");
+  delay(500);
+
+  changeSystemState(idle);
+  return;
 }
 
 void runColdFire(void)
