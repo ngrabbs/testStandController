@@ -6,43 +6,43 @@
 
 // constants
 // MEGA CONSTANTS
-//const int chamberPressureSensor = A2;  // chamber pressure sensor pin
-//const int fuelPressureSensor = A5;     // fuel pressure sensor pin
-//const int fuelPressure2Sensor = A4;    // fuel pressure before the tank pin
-//const int oxidizerPressureSensor = A1; // oxidizer pressure sensor pin
+// const int chamberPressureSensor = A2;  // chamber pressure sensor pin
+// const int fuelPressureSensor = A5;     // fuel pressure sensor pin
+// const int fuelTankPressureSensor = A4;    // fuel pressure before the tank pin
+// const int oxidizerPressureSensor = A1; // oxidizer pressure sensor pin
 //
-//const int oxidizerButtonPin = 47;   // the pin for the physical test stand ox button
-//const int fuelButtonPin = 53;       // the pin for the physical test stand fuel button
-//const int fuelSolenoidPin = 35;     // the pin that fires the relay connected to the fuel
+// const int oxidizerButtonPin = 47;   // the pin for the physical test stand ox button
+// const int fuelButtonPin = 53;       // the pin for the physical test stand fuel button
+// const int fuelOutPin = 35;     // the pin that fires the relay connected to the fuel
 //                                    // solenoid
-//const int oxidizerSolenoidPin = 37; // the pin that fires the relay connected to the
+// const int oxidizerOutPin = 37; // the pin that fires the relay connected to the
 //                                    // oxidizer solenoid
-//const int fillValveSolenoid = 39;   // fuel tank pressure fill valve
-//const int dumpValveSolenoid = 41;   // fuel tank pressure dump valve
+// const int fillValveOutPin = 39;   // fuel tank pressure fill valve
+// const int dumpValveOutPin = 41;   // fuel tank pressure dump valve
 //
-//const int igniterButtonPin = 0;    // igniter physical button pin
-//const int igniterSolenoidPin = 43; // the pin that fires the relay connected to the igniter
+// const int igniterButtonPin = 0;    // igniter physical button pin
+// const int igniterOutPin = 43; // the pin that fires the relay connected to the igniter
 //                                   // solenoid
 // END MEGA CONSTANTS
 
 // UNO CONSTANTS
 const int fuelPressureSensor = A0; // the pin for the fuel pressure sensor
 const int chamberPressureSensor = A1;
-const int fuelPressure2Sensor = A2;
+const int fuelTankPressureSensor = A2;
 const int oxidizerPressureSensor = A3;
 
-const int fuelButtonPin = 8;     // the pin for the physical test stand fuel button
+const int fuelButtonPin = 8; // the pin for the physical test stand fuel button
 const int oxidizerButtonPin = 9;
 
-const int fuelSolenoidPin =  2;  // the pin that fires the relay connected to the fuel
-                                   // solenoid
-const int oxidizerSolenoidPin = 3; // the pin that fires the relay connected to the
-                                    // oxidizer solenoid
-const int fillValveSolenoid = 4;   // fuel tank pressure fill valve
-const int dumpValveSolenoid = 5;   // fuel tank pressure dump valve
-const int igniterButtonPin = 6;    // igniter physical button pin
-const int igniterSolenoidPin = 7;  // the pin that fires the relay connected to the igniter
-                                    // solenoid
+const int fuelOutPin = 2;       // the pin that fires the relay connected to the fuel
+                                // solenoid
+const int oxidizerOutPin = 3;   // the pin that fires the relay connected to the
+                                // oxidizer solenoid
+const int fillValveOutPin = 4;  // fuel tank pressure fill valve
+const int dumpValveOutPin = 5;  // fuel tank pressure dump valve
+const int igniterButtonPin = 6; // igniter physical button pin
+const int igniterOutPin = 7;    // the pin that fires the relay connected to the igniter
+                                // solenoid
 // END UNO CONSTANTS
 
 // FUEL PRESSURE SENSOR DATA
@@ -54,17 +54,21 @@ const int igniterSolenoidPin = 7;  // the pin that fires the relay connected to 
 //
 
 // variables
-const int DEBUG = 1;
+const int fuelOperatingPressure = 1;
+const int oxidizerOperatingPressure = 100;
+const int tankPressureAbortTime = 30000;
+const int logSampleTimeMillis = 20;
 
+int DEBUG = 0;
 int fuelButtonState = 1;
 int oxidizerButtonState = 0;
 int igniterButtonState = 0;
 
-int fuelOUTPUT = 0;
-int oxidizerOUTPUT = 0;
-int igniterOUTPUT = 0;
-int dumpValveOUTPUT = 0;
-int fillValveOUTPUT = 0;
+int fuelOUT = 0;
+int oxidizerOUT = 0;
+int igniterOUT = 0;
+int dumpValveOUT = 0;
+int fillValveOUT = 0;
 
 unsigned long debounceDelay = 5;
 Vector<String> globalLog; // vector should be a lib in arduino
@@ -77,24 +81,23 @@ enum systemStates
   idle,
   coldFire,
   testLogger,
-  testPin,
-  pressureTest,
   hotFire,
-  dePressure
+  toggleDebug
 };
 systemStates systemState = idle;
 systemStates systemStatePrev = idle;
 
-void logger(void);
-float getSensorVoltage(int sensor);
+float getSensorVoltage(int);
 void printOptions(void);
-void changeSystemState(systemStates newState);
+void changeSystemState(systemStates);
 float getFuelPressure(void);
 float getFuelPressure2(void);
 void printFuelPressure(void);
 void runColdFire(void);
-void runTestPin(void);
 void runTestLogger(void);
+void toggleOutput(String);
+void timedLogger(int);
+void runToggleDebug(void);
 
 void setup()
 {
@@ -105,19 +108,19 @@ void setup()
   pinMode(fuelButtonPin, INPUT_PULLUP);
   pinMode(oxidizerButtonPin, INPUT);
 
-  pinMode(fuelSolenoidPin, OUTPUT);
-  pinMode(oxidizerSolenoidPin, OUTPUT);
-  pinMode(igniterSolenoidPin, OUTPUT);
+  pinMode(fuelOutPin, OUTPUT);
+  pinMode(oxidizerOutPin, OUTPUT);
+  pinMode(igniterOutPin, OUTPUT);
 
-  pinMode(dumpValveSolenoid, OUTPUT);
-  pinMode(fillValveSolenoid, OUTPUT);
+  pinMode(dumpValveOutPin, OUTPUT);
+  pinMode(fillValveOutPin, OUTPUT);
 
   // init pins ?
-  digitalWrite(fuelSolenoidPin, LOW);
-  digitalWrite(oxidizerSolenoidPin, LOW);
-  digitalWrite(dumpValveSolenoid, LOW);
-  digitalWrite(fillValveSolenoid, LOW);
-  digitalWrite(igniterSolenoidPin, LOW);
+  digitalWrite(fuelOutPin, LOW);
+  digitalWrite(oxidizerOutPin, LOW);
+  digitalWrite(dumpValveOutPin, LOW);
+  digitalWrite(fillValveOutPin, LOW);
+  digitalWrite(igniterOutPin, LOW);
 
   // wait a few seconds so the cli is up then present the message
   delay(15);
@@ -130,14 +133,14 @@ void loop()
 {
   switch (systemState)
   {
-  case testPin:
-    runTestPin();
-    break;
   case testLogger:
     runTestLogger();
     break;
   case coldFire:
     runColdFire();
+    break;
+  case toggleDebug:
+    runToggleDebug();
     break;
   default:
     runIdle();
@@ -145,31 +148,67 @@ void loop()
   }
 }
 
-void logger(void)
+void runToggleDebug(void)
 {
-  // millis from start, systemState, inputs, outputs, fuel pressure
-  // millis()-startTime,systemStates(systemState),armState,fuelButtonState,oxidizerButtonState,igniterButtonState,fuelOUTPUT,oxidizerOUTPUT,igniterOUTPUT,fillValveOUTPUT,dumpValveOUTPUT
-  if (DEBUG)
+  DEBUG = !DEBUG;
+  changeSystemState(idle);
+  return;
+}
+
+void timedLogger(int totalTime = 1)
+{
+  // what we want to do here is have a loop that runs ever x mills of sample time then exit
+  int count = 0;
+  int maxCount = totalTime / logSampleTimeMillis;
+  if (maxCount == 0) {
+    maxCount = 1;
+  }
+  while (count < maxCount)
   {
     Serial.println(String(
-        String(millis() - startTime) + "," + systemStates(systemState) + "," + "," + fuelButtonState + "," + oxidizerButtonState + "," + igniterButtonState + "," + fuelOUTPUT + "," + oxidizerOUTPUT + "," + igniterOUTPUT + "," + fillValveOUTPUT + "," + dumpValveOUTPUT + ",CP:" + getSensorVoltage(chamberPressureSensor) + ",FP:" + getSensorVoltage(fuelPressureSensor) + ",FP2:" + getSensorVoltage(fuelPressure2Sensor) + ",OP:" + getSensorVoltage(oxidizerPressureSensor)));
+      String(millis() - startTime) + "," + systemState + "," + fuelButtonState + "," + oxidizerButtonState + "," + igniterButtonState + "," + fuelOUT + "," + oxidizerOUT + "," + igniterOUT + "," + fillValveOUT + "," + dumpValveOUT + ",CP:" + getSensorVoltage(chamberPressureSensor) + ",FP:" + getSensorVoltage(fuelPressureSensor) + ",FP2:" + getSensorVoltage(fuelTankPressureSensor) + ",OP:" + getSensorVoltage(oxidizerPressureSensor)));
+    count = count + 1;
   }
 }
 
-float getSensorVoltage(int sensor)
+void toggleOutput(String output)
 {
-  int sensorValue = analogRead(sensor);
-  float voltage = sensorValue * (5.0 / 1023.0);
-  return voltage;
+  if (output == "fuelOUT")
+  {
+    fuelOUT = !fuelOUT;
+    digitalWrite(fuelOutPin, fuelOUT);
+  }
+  else if (output == "oxidizerOUT")
+  {
+    oxidizerOUT = !oxidizerOUT;
+    digitalWrite(oxidizerOutPin, oxidizerOUT);
+  }
+  else if (output == "igniterOUT")
+  {
+    igniterOUT = !igniterOUT;
+    digitalWrite(igniterOutPin, igniterOUT);
+  }
+  else if (output == "fillValveOUT")
+  {
+    fillValveOUT = !fillValveOUT;
+    digitalWrite(fillValveOutPin, fillValveOUT);
+  }
+  else if (output == "dumpValveOUT")
+  {
+    dumpValveOUT = !dumpValveOUT;
+    digitalWrite(dumpValveOutPin, dumpValveOUT);
+  }
 }
 
 void printOptions(void)
 {
   Serial.println("");
-  Serial.println("Menu: ");
+  Serial.print("Menu:  DEBUG:[");
+  Serial.print(DEBUG);
+  Serial.println("]");
   Serial.println("  Test Logger: 1");
   Serial.println("  Cold Fire: 2");
-  Serial.println("  Test Pin: 3");
+  Serial.println("  Toggle Debug: 3");
   Serial.println("");
 }
 
@@ -189,7 +228,7 @@ float getFuelPressure(void)
 
 float getFuelPressure2(void)
 {
-  int sensorValue = analogRead(fuelPressure2Sensor);
+  int sensorValue = analogRead(fuelTankPressureSensor);
   float voltage = sensorValue * (5.0 / 1023.0);
   return voltage;
 }
@@ -201,19 +240,11 @@ void printFuelPressure(void)
   Serial.println("]");
 }
 
-void runTestPin(void)
+float getSensorVoltage(int sensor)
 {
-  int counter = 0;
-  while (counter < 10)
-  {
-    Serial.println("testPin34 HIGH");
-    delay(1000);
-    Serial.println("testPin34 LOW");
-    delay(1000);
-    counter = counter + 1;
-  }
-  Serial.println("testPin done");
-  changeSystemState(idle);
+  int sensorValue = analogRead(sensor);
+  float voltage = sensorValue * (5.0 / 1023.0);
+  return voltage;
 }
 
 void runTestLogger(void)
@@ -221,9 +252,9 @@ void runTestLogger(void)
   int counter = 0;
   while (counter < 20)
   {
-    logger();
+    timedLogger();
     delay(100);
-    logger();
+    timedLogger();
     counter = counter + 1;
   }
   changeSystemState(idle);
@@ -255,7 +286,7 @@ void runIdle(void)
     }
     else if (request == "3")
     {
-      changeSystemState(testPin);
+      changeSystemState(toggleDebug);
     }
     /*
     switch(request) {
@@ -287,102 +318,71 @@ void runIdle(void)
 
 void runColdFire(void)
 {
-  logger();
   Serial.println("starting cold fire procedure");
-  logger();
-  delay(1000);
-
-  // read sensors
-  Serial.print("reading pressure sensors FP: [");
-  Serial.print(getFuelPressure());
-  Serial.println("]");
-  delay(1000);
-
-  // check if fuel solenoid is closed
-  Serial.println("checking if fuel solenoid is closed");
-  delay(1000);
-
-  // check if oxidizer solenoid is closed
-  Serial.println("checking if oxidizer solenoid is closed");
-  delay(1000);
+  timedLogger();
 
   // pressurize fuel tank
-  Serial.println("pressurizing fuel tank, opening fill valve");
-  delay(1000);
-  digitalWrite(fillValveSolenoid, HIGH);
-  counter = 0;
+  if (DEBUG) Serial.println("pressurizing fuel tank, closing dump valve, opening fill valve");
+  // this means to close the normally open dump valve
+  toggleOutput("dumpValveOUT");
+  // open the fill valve
+  toggleOutput("fillValveOUT");
 
-  while (counter < 10)
+  // check if fuel pressure comes up to operating pressure
+  float pressureStartTime = millis();
+  while (getSensorVoltage(fuelTankPressureSensor) < fuelOperatingPressure)
   {
-    printFuelPressure();
-    counter = counter + 1;
-    delay(500);
+    timedLogger(500);
+    //    timedLogger();
+    //    delay(500);
+    if ((millis() - pressureStartTime) > tankPressureAbortTime)
+    {
+      if (DEBUG) Serial.println("Fuel pressure never came up, hit time out, aborting...");
+      toggleOutput("fillValveOUT");
+      toggleOutput("dumpValveOUT");
+      if (DEBUG) Serial.println("Cold Fire failed, returning to Idle");
+      changeSystemState(idle);
+      return;
+    }
   }
-  digitalWrite(fillValveSolenoid, LOW);
-  Serial.print("completed pressure fill ");
+  if (DEBUG) Serial.println("completed pressure fill ");
   printFuelPressure();
-  delay(1000);
 
-  // check pressure sensors
-  Serial.print("checking if tank is pressurized ");
-  printFuelPressure();
-  delay(1000);
+  // check if oxidizer comes up to operating pressure
+  // TBD
 
   // fire igniter
+  /* not for cold fire
   Serial.println("firing igniter");
-  digitalWrite(igniterSolenoidPin, HIGH);
+  digitalWrite(igniterOutPin, HIGH);
   delay(1500);
-  digitalWrite(igniterSolenoidPin, LOW);
+  digitalWrite(igniterOutPin, LOW);
+  */
 
   // open oxidizer solenoid for x seconds
-  Serial.print("opening fuel solenoid 500 millis ");
-  printFuelPressure();
-  digitalWrite(fuelSolenoidPin, HIGH);
-  delay(1500);
-  digitalWrite(fuelSolenoidPin, LOW);
-  Serial.print("closed fuel solenoid ");
-  printFuelPressure();
+  if (DEBUG) Serial.println("opening fuel solenoid 500 millis ");
+  timedLogger();
+  toggleOutput("fuelOUT");
+  timedLogger(1500);
+  toggleOutput("fuelOUT");
+  if (DEBUG) Serial.println("closed fuel solenoid ");
+  timedLogger();
   delay(100);
-  Serial.print("opening oxidizer solenoid 500 millis ");
-  printFuelPressure();
-  digitalWrite(oxidizerSolenoidPin, HIGH);
-  delay(500);
-  digitalWrite(oxidizerSolenoidPin, LOW);
-  Serial.print("closed oxidizer solenoid ");
-  printFuelPressure();
-  delay(5000);
-
-  // check pressure sensors
-  Serial.print("checking pressure sensors ");
-  printFuelPressure();
-  delay(1000);
+  if (DEBUG) Serial.println("opening oxidizer solenoid 500 millis ");
+  timedLogger();
+  toggleOutput("oxidizerOUT");
+  timedLogger(500);
+  toggleOutput("oxidizerOUT");
+  if (DEBUG) Serial.println("closed oxidizer solenoid ");
+  timedLogger();
 
   // depressurize fuel tank
-  Serial.print("depressuring fuel tank ");
-  printFuelPressure();
-  float fuelPressureStart = getFuelPressure();
-  unsigned long startTime = millis();
-
-  digitalWrite(dumpValveSolenoid, HIGH);
-  delay(1000);
-  digitalWrite(dumpValveSolenoid, LOW);
-  unsigned long endTime = millis() - startTime;
-  float fuelPressureEnd = getFuelPressure();
-
-  Serial.print("Fuel pressure difference: [");
-  Serial.print(fuelPressureStart - fuelPressureEnd);
-  Serial.print("] in [");
-  Serial.print((endTime) / 1000);
-  Serial.println("] seconds");
-
-  // check sensors
-  Serial.print("final pressure check ");
-  printFuelPressure();
-  delay(1000);
+  toggleOutput("fillValveOUT");
+  toggleOutput("dumpValveOUT");
 
   // complete
-  Serial.println("cold flow is complete setting state to idle");
+  timedLogger();
+  if (DEBUG) Serial.println("cold flow is complete setting state to idle");
+
   changeSystemState(idle);
-  delay(1000);
-  logger();
 }
